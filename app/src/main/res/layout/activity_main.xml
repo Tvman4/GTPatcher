@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#121212">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GTPatcher"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bytezuku Pairing &amp; Utility Hook Active"
+        android:textSize="14sp"
+        android:textColor="#AAAAAA"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnPatch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Initialize Patching Pipeline"
+        android:backgroundTint="#6200EE"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"/>
+
+</LinearLayout>
