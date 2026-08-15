@@ -21,15 +21,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Generate Gradle Wrapper
+      - name: Generate Gradle Wrapper (Fixed Version 8.0)
         run: |
-          if [ ! -f "./gradlew" ]; then
-            echo "Generating Gradle wrapper..."
-            gradle wrapper --gradle-version 8.1.1
-            chmod +x ./gradlew
-          else
-            chmod +x ./gradlew
-          fi
+          gradle wrapper --gradle-version 8.0
+          chmod +x ./gradlew
 
       - name: Build Release APK
         run: |
