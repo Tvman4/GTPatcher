@@ -1,4 +1,4 @@
-name: Build GTPatcher VR APK
+name : Build GTPatcher VR APK
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Release Signed APK for VR
+    name: Build Signed Release APK for VR
     runs-on: ubuntu-latest
 
     steps:
@@ -21,17 +21,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Generate Signing Keystore and Properties
+      - name: Configure Android Properties & Generate Keystore
         run: |
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.enableJetifier=true" >> gradle.properties
           
-          # Generate a standard debug.keystore locally for signing the release variant
-          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=VRMods, OU=GTPatcher, O=VRMods, L=Unknown, ST=Unknown, C=US"
+          keytool -genkey -v -keystore release.jks -storepass password123 -alias GTPatcher -keypass password123 -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=GTPatcher, O=VRMods, C=US"
 
       - name: Build Signed Release APK
         run: |
-          ./gradlew clean assembleRelease
+          ./gradlew clean assembleRelease \
+            -Pandroid.injected.signing.store.file="release.jks" \
+            -Pandroid.injected.signing.store.password="password123" \
+            -Pandroid.injected.signing.key.alias="GTPatcher" \
+            -Pandroid.injected.signing.key.password="password123"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
