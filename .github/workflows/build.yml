@@ -1,0 +1,40 @@
+name: Build GTPatcher VR APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build Release APK for VR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x ./gradlew
+
+      - name: Build Release APK
+        run: |
+          ./gradlew clean assembleRelease \
+            -Pandroid.injected.signing.store.file="" \
+            -Pandroid.injected.signing.store.password="" \
+            -Pandroid.injected.signing.key.alias="" \
+            -Pandroid.injected.signing.key.password=""
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GTPatcher-Release-VR
+          path: app/build/outputs/apk/release/*.apk
