@@ -1,0 +1,55 @@
+name: Build GTPatcher iOS
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build and Sign GTPatcher (Release)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode Version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.2'
+
+      - name: Install Dependencies & Bytezuku Framework
+        run: |
+          echo "Setting up workspace and pulling bytezuku dependencies..."
+          # Insert setup commands for bytezuku pairing/utility layer here
+          cd $GITHUB_WORKSPACE
+
+      - name: Configure Project Build Settings (Non-Debug, Release Signed)
+        run: |
+          echo "Configuring Xcode project for com.VRMods.GTPatcher..."
+          # Ensure DEBUG flag is disabled and code signing identity is set for release
+          xcodebuild -list
+
+      - name: Build GTPatcher Archive
+        run: |
+          xcodebuild -project GTPatcher.xcodeproj \
+            -scheme GTPatcher \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/GTPatcher.app Payload/
+          zip -r GTPatcher.ipa Payload/
+          rm -rf Payload
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GTPatcher-Release
+          path: GTPatcher.ipa
