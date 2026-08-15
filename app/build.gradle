@@ -17,9 +17,20 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            // Uses standard debug keystore fallback for signed release generation if custom keystore isn't provided
+            storeFile file(System.getenv("ANDROID_KEYSTORE_PATH") ?: "debug.keystore")
+            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: "android"
+            keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS") ?: "androiddebugkey"
+            keyPassword System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: "android"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
