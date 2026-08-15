@@ -21,26 +21,23 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Make Gradle Wrapper Executable
+      - name: Generate Gradle Wrapper
         run: |
-          if [ -f "./gradlew" ]; then
+          if [ ! -f "./gradlew" ]; then
+            echo "Generating Gradle wrapper..."
+            gradle wrapper --gradle-version 8.1.1
             chmod +x ./gradlew
           else
-            echo "Gradle wrapper not found yet, skipping chmod."
+            chmod +x ./gradlew
           fi
 
       - name: Build Release APK
         run: |
-          if [ -f "./gradlew" ]; then
-            ./gradlew clean assembleRelease \
-              -Pandroid.injected.signing.store.file="" \
-              -Pandroid.injected.signing.store.password="" \
-              -Pandroid.injected.signing.key.alias="" \
-              -Pandroid.injected.signing.key.password=""
-          else
-            echo "Project structure missing Android/Gradle source files. Please add your Android project files to the repository."
-            exit 1
-          fi
+          ./gradlew clean assembleRelease \
+            -Pandroid.injected.signing.store.file="" \
+            -Pandroid.injected.signing.store.password="" \
+            -Pandroid.injected.signing.key.alias="" \
+            -Pandroid.injected.signing.key.password=""
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
